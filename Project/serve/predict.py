@@ -93,12 +93,16 @@ def predict_fn(input_data, model):
        with requires_grad=True, but for which we don’t need the gradients.
        Source:https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html#gradients
        
+       forward is defined in model.py which Perform a forward pass of the model on Data.
+       forward(self, x) which is same as calling model(Data)
     '''
     
-     with torch.no_grad(): 
-            
-         output=model.forward(data)
-            
-    result=np.round(output.numpy())
+    print('Starting of Prediction.')
+    with torch.no_grad(): 
+        prediction=model.forward(data)
+        print('Prediction Complete. Converting Result to numpy array then ')
+    #converting prediction to numpy array then using  numpy.round_(a, decimals=0, out=None)
+    #To Round an array to the given number of decimals which is by default 0.    
+    result=np.round(prediction.numpy())  
 
     return result
