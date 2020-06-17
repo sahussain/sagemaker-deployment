@@ -70,8 +70,7 @@ def predict_fn(input_data, model):
     #         data_X   - A sequence of length 500 which represents the converted review
     #         data_len - The length of the review
 
-    data_X = None
-    data_len = None
+    data_X , data_len = convert_and_pad(model.word_dict, review_to_words(input_data)) 
 
     # Using data_X and data_len we construct an appropriate input tensor. Remember
     # that our model expects input data of the form 'len, review[500]'.
@@ -84,22 +83,21 @@ def predict_fn(input_data, model):
     # Make sure to put the model into evaluation mode
     model.eval()
 
-    '''
-       To prevent tracking history (and using memory), you can also wrap the code block in with torch.no_grad():. 
-       This can be particularly helpful when evaluating a model because the model may have trainable parameters 
-       with requires_grad=True, but for which we don’t need the gradients.
-       Source:https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html#gradients
-       
-       forward is defined in model.py which Perform a forward pass of the model on Data.
-       forward(self, x) which is same as calling model(Data)
-    '''
+    # TODO: Compute the result of applying the model to the input data. The variable `result` should
+    #       be a numpy array which contains a single integer which is either 1 or 0
+    #
+    #   To prevent tracking history (and using memory), you can also wrap the code block in with torch.no_grad():. 
+    #   This can be particularly helpful when evaluating a model because the model may have trainable parameters 
+    #   with requires_grad=True, but for which we don’t need the gradients.
+    #   Source:https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html#gradients
+    #   
+    #   forward is defined in model.py which Perform a forward pass of the model on Data.
+    #   forward(self, x) which is same as calling model(Data)
     
-    print('Starting of Prediction.')
-    with torch.no_grad(): 
-        prediction=model.forward(data)
-        print('Prediction Complete. Converting Result to numpy array then ')
-    #converting prediction to numpy array then using  numpy.round_(a, decimals=0, out=None)
-    #To Round an array to the given number of decimals which is by default 0.    
-    result=np.round(prediction.numpy()) 
-    
+
+    with torch.no_grad():
+         output=model.forward(data)
+            
+    result=np.round(output.numpy())
+
     return result
